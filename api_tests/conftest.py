@@ -1,14 +1,22 @@
 import requests
 import pytest
-from .urls import Urls
-from .endpoints import Endpoints
-from .data import Login
+from api_tests.urls import Urls
+from api_tests.endpoints import Endpoints
+from api_tests.user_requests import User
+from api_tests.helps import NewNameCreate
+
+# фикстура регистрации юзера
+@pytest.fixture()
+def user_register():
+    user_create = User().user_registration_in_the_system_and_get_user_data()
+    yield user_create
+
+# фикстура авторизации юзера
+@pytest.fixture()
+def user_login():
+    user_create = User().user_registration_in_the_system_and_get_user_data()
+    token = User().user_login_in_the_system_and_get_token(user_create)
+    return token
 
 
-@pytest.fixture
-def get_token():
-    data = Login.register
-    response = requests.post(f'{Urls.BASE_URL}{Endpoints.user_login}', json=data)
-    response_json = response.json() 
-    return response_json.get('token')
 

@@ -1,13 +1,15 @@
 import allure
 import pytest
 import requests
-from ..urls import Urls
-from ..endpoints import Endpoints
-from ..data import Exist
+from api_tests.urls import Urls
+from api_tests.endpoints import Endpoints
+from api_tests.helps import NewEmailCreate
+from api_tests.user_requests import Exist
 
 @allure.title('Проверка шоковости')
 @allure.description('''Отправляем запрос с указанием почты зарегистрированного пользователя''')
-def test_exist_user():
+def test_exist_user(user_register):
+
 
     data = Exist.exist
     response = requests.post(f'{Urls.BASE_URL}{Endpoints.user_exist}', json=data)
@@ -22,8 +24,8 @@ def test_exist_user():
 @allure.description('''Отправляем запрос с указанием почты незарегистрированного пользователя''')
 def test_not_exist_user():
 
-
-    data = Exist.notexist
+    data = NewEmailCreate().get_email()
+    
     response = requests.post(f'{Urls.BASE_URL}{Endpoints.user_exist}', json=data)
     assert response.status_code == 200
 
